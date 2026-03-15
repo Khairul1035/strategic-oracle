@@ -1,104 +1,114 @@
 import streamlit as st
 import pandas as pd
+import plotly.graph_objects as go
 import plotly.express as px
 
-# 1. HCI & UX Configuration
-st.set_page_config(page_title="Strategic Oracle v2.0", layout="wide")
-st.markdown("<style>div.block-container{padding-top:1.5rem;}</style>", unsafe_allow_html=True)
+# 1. Expert HCI Configuration
+st.set_page_config(page_title="Strategic Oracle v3.0", layout="wide")
+st.markdown("<style>div.block-container{padding-top:1rem;}</style>", unsafe_allow_html=True)
 
-# Sidebar: Branding & Profile
+# Sidebar: Expert Branding
 st.sidebar.title("Strategic Analyst")
 st.sidebar.info("Mohd Khairul Ridhuan bin Mohd Fadzil")
 st.sidebar.markdown("""
-**Expertise Layers:**
-- 🌍 Geopolitics (Quantitative)
-- 📊 Accounting & Management
-- 💡 Business & Theology
+**Domain Expertise:**
+- 🌍 Geopolitics & Tactical Logic
+- 📊 Accounting & Resource Management
+- 💡 Theology & Institutional Ethics
 - 🧠 Cognitive Neuroscience
-- 💻 HCI Modeling
+- 💻 HCI Decision-Modeling
 """)
 
-st.title("🌍 THE STRATEGIC ORACLE v2.0")
-st.subheader("Predictive Win/Loss Simulation: Iran-West Escalation")
+st.title("🌍 THE STRATEGIC ORACLE v3.0: High-Level Predictive Engine")
 
-# 2. Hard Data: Military Ratios (Approximated Global Power Index)
-# Values represent Power Units (Personnel, Jets, Missile Tech, EW/AI)
-military_data = {
-    "USA": {"Army": 95, "Jets": 100, "Missiles": 95, "Tech": 100, "Econ": 95},
-    "UK": {"Army": 60, "Jets": 75, "Missiles": 80, "Tech": 85, "Econ": 80},
-    "Germany": {"Army": 55, "Jets": 70, "Missiles": 65, "Tech": 90, "Econ": 90},
-    "France": {"Army": 70, "Jets": 85, "Missiles": 85, "Tech": 88, "Econ": 85},
-    "India": {"Army": 90, "Jets": 80, "Missiles": 90, "Tech": 75, "Econ": 85},
-    "Iran": {"Army": 85, "Jets": 40, "Missiles": 95, "Tech": 65, "Econ": 50},
-    "Russia": {"Army": 90, "Jets": 85, "Missiles": 100, "Tech": 80, "Econ": 60},
-    "China Proxy": {"Army": 95, "Jets": 90, "Missiles": 95, "Tech": 95, "Econ": 98},
-    "Israel": {"Army": 80, "Jets": 95, "Missiles": 95, "Tech": 98, "Econ": 80}
+# 2. Hard Data: Global Power Metrics
+military_db = {
+    "USA": {"Army": 95, "Jets": 100, "Missiles": 98, "Tech": 100, "Econ": 98},
+    "UK": {"Army": 70, "Jets": 82, "Missiles": 85, "Tech": 92, "Econ": 85},
+    "Germany": {"Army": 60, "Jets": 75, "Missiles": 70, "Tech": 95, "Econ": 95},
+    "France": {"Army": 75, "Jets": 88, "Missiles": 88, "Tech": 90, "Econ": 88},
+    "India": {"Army": 98, "Jets": 85, "Missiles": 95, "Tech": 82, "Econ": 90},
+    "Israel": {"Army": 85, "Jets": 98, "Missiles": 98, "Tech": 100, "Econ": 82},
+    "Iran": {"Army": 90, "Jets": 45, "Missiles": 98, "Tech": 70, "Econ": 55},
+    "Russia": {"Army": 92, "Jets": 88, "Missiles": 100, "Tech": 85, "Econ": 65},
+    "China Proxy": {"Army": 100, "Jets": 95, "Missiles": 96, "Tech": 98, "Econ": 100},
+    "Syria": {"Army": 60, "Jets": 30, "Missiles": 75, "Tech": 40, "Econ": 30}
 }
 
-# 3. Interactive Strategic Selection
-st.markdown("### 🛠️ Configure War-Gaming Alignment")
+# 3. Interactive Strategic Map
+st.markdown("### 🗺️ Tactical Alignment Configuration")
 col_a, col_b = st.columns(2)
 
 with col_a:
-    st.markdown("#### 🔵 Western Bloc (US/UK Core)")
-    west_allies = st.multiselect("Select Allies for West:", ["Germany", "France", "Israel", "India", "Australia", "Japan"], default=["Israel"])
+    st.markdown("#### 🔵 Western Coalition (US-UK Core)")
+    west_allies = st.multiselect("Active Allies:", ["Germany", "France", "Israel", "India", "Australia", "Japan"], default=["Israel", "Germany"])
+    active_west = ["USA", "UK"] + west_allies
 
 with col_b:
     st.markdown("#### 🔴 Resistance Axis (Iran Core)")
-    east_allies = st.multiselect("Select Allies for Iran:", ["Russia", "China Proxy", "North Korea", "Syria", "Iraq Militia"], default=["Russia"])
+    east_allies = st.multiselect("Active Allies:", ["Russia", "China Proxy", "Syria", "Iraq Militia", "North Korea"], default=["Russia", "Syria"])
+    active_east = ["Iran"] + east_allies
 
-# 4. The Algorithm (Strategic Weighting)
-def calculate_score(core_country, allied_list):
-    total = military_data[core_country].copy()
-    for ally in allied_list:
-        if ally in military_data:
-            for key in total:
-                total[key] += (military_data[ally][key] * 0.6) # Allies provide 60% of their power as support
-    
-    # Weighted Result: Army(20%), Jets(30%), Missiles(25%), Tech(25%)
-    final_score = (total["Army"]*0.2) + (total["Jets"]*0.3) + (total["Missiles"]*0.25) + (total["Tech"]*0.25)
-    return final_score, total
+# 4. Expert Algorithmic Calculation
+def aggregate_power(country_list):
+    stats = {"Army": 0, "Jets": 0, "Missiles": 0, "Tech": 0, "Econ": 0}
+    for c in country_list:
+        if c in military_db:
+            for k in stats:
+                # Primary countries contribute 100%, secondary allies contribute 75%
+                weight = 1.0 if c in ["USA", "UK", "Iran"] else 0.75
+                stats[k] += military_db[c][k] * weight
+    return stats
 
-west_score, west_stats = calculate_score("USA", west_allies)
-east_score, east_stats = calculate_score("Iran", east_allies)
+west_stats = aggregate_power(active_west)
+east_stats = aggregate_power(active_east)
 
-# Normalized Percentage
-total_power = west_score + east_score
-win_prob_west = (west_score / total_power) * 100
-win_prob_east = 100 - win_prob_west
+# Win/Loss Prediction based on Air Superiority and Tech Edge
+w_total = sum(west_stats.values())
+e_total = sum(east_stats.values())
+win_w = (w_total / (w_total + e_total)) * 100
+win_e = 100 - win_w
 
-# 5. Simulation Dashboard
+# 5. Expert Dashboard Display
 st.divider()
-st.subheader("📊 Simulation Outcomes & Global Impact")
+st.subheader("📊 Predictive Intelligence & System Dynamics")
 
 m1, m2, m3 = st.columns(3)
-m1.metric("US-UK Bloc Win Probability", f"{win_prob_west:.1f}%")
-m2.metric("Iran Axis Leverage", f"{win_prob_east:.1f}%")
-# Global Stress Index based on total Jets and Missiles active
-global_stress = (west_stats["Missiles"] + east_stats["Missiles"]) / 10
-m3.metric("Global Cognitive Stress Index", f"{global_stress:.1f} Hz", "High Risk")
+m1.metric("Western Coalition Leverage", f"{win_w:.1f}%")
+m2.metric("Resistance Axis Leverage", f"{win_e:.1f}%")
+# Global Stress = Total Missile Tech + Tech Complexity
+stress = (west_stats["Missiles"] + east_stats["Tech"]) / 15
+m3.metric("Global Cognitive Stress Index", f"{stress:.1f} Hz", "High Escalation")
 
-# Visualizing Power Comparison
-df_compare = pd.DataFrame({
-    "Category": ["Army", "Jets", "Missiles", "Tech", "Econ"],
-    "US-UK Bloc": [west_stats[k] for k in ["Army", "Jets", "Missiles", "Tech", "Econ"]],
-    "Iran Axis": [east_stats[k] for k in ["Army", "Jets", "Missiles", "Tech", "Econ"]]
-})
+# HCI Innovation: Radar Chart for Multi-Dimensional Analysis
+categories = ['Army', 'Jets', 'Missiles', 'Tech', 'Econ']
+fig = go.Figure()
 
-fig = px.bar(df_compare, x="Category", y=["US-UK Bloc", "Iran Axis"], barmode='group', 
-             title="Comparative Military & Asset Capabilities", template="plotly_dark")
+fig.add_trace(go.Scatterpolar(
+      r=[west_stats[k] for k in categories],
+      theta=categories, fill='toself', name='Western Coalition'
+))
+fig.add_trace(go.Scatterpolar(
+      r=[east_stats[k] for k in categories],
+      theta=categories, fill='toself', name='Resistance Axis'
+))
+
+fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, max(w_total, e_total)/2.5])), 
+                  showlegend=True, template="plotly_dark", title="Symmetric vs Asymmetric Power Profile")
 st.plotly_chart(fig, use_container_width=True)
 
-# 6. Strategic Deep-Dive
-st.markdown("### 🏛️ Strategic & Management Analysis")
+# 6. Professional Strategic Deep-Dive
+st.markdown("### 🏛️ Strategic & Management Commentary")
 st.write(f"""
-The simulation shows a **{win_prob_west:.1f}%** tactical advantage for the Western Bloc, primarily driven by **Jet Superiority** and **Economic Resilience**. 
-However, the Iran Axis maintains high leverage through **Asymmetric Missile Capability** ({east_stats['Missiles']} units).
+**Coalition Analysis:** 
+The Western Bloc currently integrates **{', '.join(active_west)}**. 
+The Resistance Axis is reinforced by **{', '.join(active_east)}**.
 
-**Global Impact:**
-1. **Financial Integrity:** High missile activity suggests a 200% surge in War Risk Insurance premiums.
-2. **Cognitive Load:** A stress level of **{global_stress:.1f} Hz** indicates that global decision-makers are nearing 'Cognitive Exhaustion,' which leads to unethical reactive management.
-3. **Theological Reflection:** True victory is not in military dominance, but in the preservation of human life and dignity. The goal of this data is to advocate for **Clarity over Chaos**.
+**Expert Observation:**
+1. **Asymmetric Risk:** While the West maintains **Air & Tech Superiority**, the Resistance Axis holds significant leverage through **Missile Saturation** and **Ground Army** density.
+2. **Economic Integrity:** From an **Accounting & Sustainability** perspective, the high 'Econ' score of the West suggests a longer 'War Attrition' capability, but a massive hit to global supply chains is inevitable.
+3. **Cognitive Neuroscience:** A Stress Index of **{stress:.1f} Hz** indicates that decision-makers are operating in 'Amygdala-High' mode, increasing the risk of miscalculation. 
+4. **Theological Alignment:** True victory is not military; it is the **preservation of life**. We use these metrics to visualize the cost of failure, urging for **Ethical Strategic Governance**.
 """)
 
 st.info("Developed by Mohd Khairul Ridhuan | Bridging Management, Theology, and Technology.")
