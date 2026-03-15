@@ -2,103 +2,125 @@ import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 
-# 1. UI: "The Bloomberg Strategist" Theme
-st.set_page_config(page_title="THE MORAL LEDGER v6.0", layout="wide")
+# 1. UI: "The Clean Auditor" Theme (High Readability)
+st.set_page_config(page_title="THE MORAL LEDGER v6.1", layout="wide")
 
 st.markdown("""
     <style>
-    .main { background-color: #050a10; color: #d1d5db; }
-    .stMetric { background-color: #111827; border: 1px solid #1f2937; border-radius: 4px; padding: 20px; }
-    [data-testid="stMetricValue"] { color: #34d399 !important; font-family: 'Courier New', monospace; }
-    h1, h2, h3 { color: #f3f4f6; font-family: 'Helvetica Neue', sans-serif; letter-spacing: -0.5px; }
-    .sidebar .sidebar-content { background-image: linear-gradient(#111827,#111827); color: white; }
+    /* Background and Main Font */
+    .main { background-color: #ffffff; color: #1f2937; }
+    html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
+
+    /* Metrics Box Styling (Sharp & Professional) */
+    [data-testid="stMetricValue"] { 
+        color: #059669 !important; 
+        font-size: 2.8rem !important; 
+        font-weight: 800 !important; 
+    }
+    [data-testid="stMetricLabel"] { 
+        color: #4b5563 !important; 
+        font-size: 1.1rem !important; 
+        font-weight: 600 !important; 
+    }
+    .stMetric { 
+        background-color: #f9fafb; 
+        border: 1px solid #e5e7eb; 
+        border-radius: 8px; 
+        padding: 25px; 
+    }
+
+    /* Titles */
+    h1, h2, h3 { color: #111827; font-weight: 800; }
+    
+    /* Sidebar */
+    .css-1d391kg { background-color: #111827; }
+    .sidebar-text { color: #ffffff; font-size: 0.9rem; }
     </style>
     """, unsafe_allow_html=True)
 
-# 2. Sidebar: Professional Alignment (Kekuatan Anda)
-st.sidebar.title("STRATEGIC AUDITOR")
+# 2. Sidebar: Professional Alignment
+st.sidebar.title("STRATEGIC ARCHITECT")
 st.sidebar.markdown(f"""
----
-**Mohd Khairul Ridhuan bin Mohd Fadzil**
-*Researcher in Management & Theology*
+<div class="sidebar-text">
+<strong>Mohd Khairul Ridhuan bin Mohd Fadzil</strong><br>
+<em>Researcher: Management & Theology</em><br><br>
+<strong>Audit Focus:</strong><br>
+- ⚖️ Theological Integrity<br>
+- 📈 Sustainability Audit<br>
+- 🧠 Cognitive Resilience<br>
+- 💻 Strategic HCI Design
+</div>
+""", unsafe_allow_html=True)
 
-**Audit Pillars:**
-- ⚖️ **Theological Integrity:** Maqasid-based Risk
-- 📈 **Corporate Sustainability:** Long-term Human Capital
-- 🧠 **Cognitive Audit:** Decision-Maker Resilience
-- 💻 **HCI:** Strategic Information Design
-""")
+st.title("🏛️ THE MORAL LEDGER v6.1: Institutional Integrity Audit")
+st.markdown("##### *Quantifying Underexplored Hidden Costs: Management Entropy & Moral Debt*")
 
-st.title("🏛️ THE MORAL LEDGER: Geopolitical Management Entropy")
-st.markdown("##### *Quantifying the 'Underexplored' Hidden Costs of Conflict on Institutional Integrity*")
+# 3. Parameters (The Inputs)
+st.divider()
+st.subheader("⚙️ Audit Parameters (Geopolitical Stress Factors)")
+c_in1, c_in2, c_in3 = st.columns(3)
+with c_in1:
+    inst_decay = st.slider("Institutional Entropy (Management Decay)", 0, 100, 20)
+with c_in2:
+    moral_debt = st.slider("Generational Moral Debt Index", 0, 100, 40)
+with c_in3:
+    trust_leak = st.slider("Information Integrity Leakage", 0, 100, 15)
 
-# 3. The "Overlooked" Variables (Inputs)
-st.sidebar.divider()
-st.sidebar.subheader("Conflict Audit Parameters")
-institutional_decay = st.sidebar.slider("Institutional Entropy (Management Decay)", 0, 100, 35)
-moral_debt_index = st.sidebar.slider("Generational Moral Debt", 0, 100, 50)
-transparency_leak = st.sidebar.slider("Information Integrity Leakage", 0, 100, 25)
+# 4. Logic: The Integrity Formula
+stability = 100 - (inst_decay * 0.4 + moral_debt * 0.4 + trust_leak * 0.2)
+recovery = (inst_decay / 10) * 3
 
-# 4. Logic: The Entropy Formula
-# Expert Concept: Moral Attrition is a result of Management Decay + Lack of Transparency
-stability_score = 100 - (institutional_decay * 0.4 + moral_debt_index * 0.4 + transparency_leak * 0.2)
-recovery_years = (institutional_decay / 10) * 3  # Every 10% decay takes 3 years to recover
-
-# 5. Visual 1: Institutional Integrity Flow (Sankey)
+# 5. Visual 1: Sankey Diagram (High Contrast Labels)
 fig_flow = go.Figure(data=[go.Sankey(
-    node = dict(pad = 15, thickness = 20, line = dict(color = "black", width = 0.5),
-      label = ["Ethical Capital", "Management Integrity", "Strategic Purpose", "Institutional Decay", "Sustainability Gap"],
-      color = ["#3b82f6", "#10b981", "#6366f1", "#ef4444", "#f59e0b"]),
+    node = dict(pad = 30, thickness = 30, line = dict(color = "white", width = 2),
+      label = ["ETHICAL CAPITAL", "MANAGEMENT INTEGRITY", "STRATEGIC PURPOSE", "INSTITUTIONAL DECAY", "SUSTAINABILITY GAP"],
+      color = ["#2563eb", "#10b981", "#6366f1", "#ef4444", "#f59e0b"]),
     link = dict(
       source = [0, 1, 1, 2, 2], 
       target = [1, 3, 2, 4, 3],
-      value = [100, institutional_decay, 100-institutional_decay, moral_debt_index, institutional_decay*0.5]
+      value = [100, inst_decay, 100-inst_decay, moral_debt, inst_decay*0.5]
   ))])
-fig_flow.update_layout(title_text="<b>Institutional Energy Leakage: How Conflict Erodes Purpose</b>", 
-                       template="plotly_dark", font_size=12, height=400, paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
+fig_flow.update_layout(title_text="<b>RESOURCE FLOW: How Conflict Erodes Institutional Integrity</b>", 
+                       font=dict(size=14, color="black"), height=450, template="plotly_white")
 
-# 6. Visual 2: The Sustainability Radar (Audit Framework)
+# 6. Visual 2: Radar Chart (Clear & Sharp)
 categories = ['Ethical Leadership', 'Strategic Clarity', 'Human Dignity', 'Financial Integrity', 'Generational Trust']
-audit_values = [
-    100 - institutional_decay,
-    100 - transparency_leak,
-    100 - moral_debt_index,
-    80 - (institutional_decay * 0.5),
-    100 - (moral_debt_index * 0.8)
-]
+audit_values = [100-inst_decay, 100-trust_leak, 100-moral_debt, 85-(inst_decay*0.5), 100-(moral_debt*0.8)]
 
 fig_radar = go.Figure()
-fig_radar.add_trace(go.Scatterpolar(r=audit_values, theta=categories, fill='toself', name='Current Audit',
-                                   line_color='#34d399', fillcolor='rgba(52, 211, 153, 0.2)'))
-fig_radar.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 100], gridcolor="#374151")),
-                        showlegend=False, template="plotly_dark", height=450, title="<b>Audit Result: Resilience vs Entropy</b>",
-                        paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
+fig_radar.add_trace(go.Scatterpolar(r=audit_values, theta=categories, fill='toself', name='Audit Score',
+                                   line_color='#059669', fillcolor='rgba(5, 150, 105, 0.2)'))
+fig_radar.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 100], gridcolor="#e5e7eb")),
+                        showlegend=False, template="plotly_white", height=450, 
+                        title="<b>AUDIT PROFILE: Institutional Resilience Star</b>",
+                        font=dict(size=13, color="black"))
 
-# Layout
-c1, c2 = st.columns([1.2, 0.8])
-with c1:
+# Executive Layout
+col_left, col_right = st.columns([1.2, 0.8])
+with col_left:
     st.plotly_chart(fig_flow, use_container_width=True)
-with c2:
+with col_right:
     st.plotly_chart(fig_radar, use_container_width=True)
 
-# 7. Professional Metrics (Audit Summary)
+# 7. Metrics (The Dashboard Numbers)
 st.divider()
 m1, m2, m3 = st.columns(3)
-m1.metric("Institutional Stability", f"{stability_score:.1f}%", "-Low" if stability_score < 50 else "Stable")
-m2.metric("Moral Recovery Period", f"{recovery_years:.1f} Years", "Generational Gap")
-m3.metric("Management Entropy", f"{institutional_decay}%", "Critical" if institutional_decay > 60 else "Rising")
+m1.metric("INSTITUTIONAL STABILITY", f"{stability:.1f}%")
+m2.metric("MORAL RECOVERY PERIOD", f"{recovery:.1f} YEARS")
+m3.metric("MANAGEMENT ENTROPY", f"{inst_decay}%")
 
-# 8. Expert Commentary: The Overlooked Perspective
+# 8. Analyst Narrative (English Corporate Style)
 st.divider()
-st.subheader("🕵️ Analyst Insight: The Theology of Global Risk")
+st.subheader("🕵️ Analyst Insight: The Theology of Global Management")
 st.markdown(f"""
-Most geopolitical models overlook the **Generational Moral Debt** created during a crisis. As a researcher in **Management and Theology**, I look at the 'Internal Border' of an organization.
+Traditional geopolitical models focus on external borders; this audit focuses on the **Internal Borders of Integrity.** 
+As a researcher bridging **Management and Theology**, I evaluate how conflict decays the 'Institutional Soul.'
 
-1. **Management Entropy:** Conflict forces institutions to abandon long-term **Sustainability (Maqasid)** for short-term survival. This creates a decay in institutional soul that takes approximately **{recovery_years:.1f} years** to fix.
-2. **The Integrity Leak:** When transparency drops by **{transparency_leak}%**, the 'Management Integrity' flow redirects into **'Systemic Risk'**.
-3. **The Sustainability Gap:** Geopolitics is not about who wins today; it is about who maintains the **Generational Trust** required for tomorrow's economy.
+1. **Management Entropy:** Geopolitical stress forces institutions to abandon long-term **Sustainability (Maqasid)** for short-term survival. This creates an 'Entropy' that requires approximately **{recovery:.1f} years** of ethical rebuilding.
+2. **Generational Moral Debt:** The 'Hidden Cost' of conflict is the erosion of **Human Dignity** and **Generational Trust**. When these scores drop, the 'Sustainability Gap' widens, threatening the future economic order.
+3. **The Solution:** True resilience is found in **Ethical Strategic Governance.** We must protect the 'Intellectual and Moral Capital' (Aql & Nafs) of our institutions to ensure long-term survival.
 
-**Transparency is not just a policy; it is the preservation of the Intellectual and Moral Soul (Aql & Nafs) of an institution.**
+**Transparency is the most strategic form of Charity (Sadaqah) in a crisis.**
 """)
 
-st.markdown("<div style='text-align: center; color: #4b5563; padding: 20px;'>Mohd Khairul Ridhuan | Interdisciplinary Strategic Audit v6.0</div>", unsafe_allow_html=True)
+st.markdown("<div style='text-align: center; color: #94a3b8; padding: 20px;'>Developed by Mohd Khairul Ridhuan | Interdisciplinary Research v6.1</div>", unsafe_allow_html=True)
